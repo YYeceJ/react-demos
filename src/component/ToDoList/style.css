@@ -1,0 +1,13 @@
+.container {
+    width: 80%;
+    display: flex;
+    margin: 20px auto;
+    background-color: #F9FAFC;
+    flex-direction: column;
+}
+.inputContainer{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+}
+
