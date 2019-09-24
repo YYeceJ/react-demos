@@ -5,9 +5,21 @@
     background-color: #F9FAFC;
     flex-direction: column;
 }
-.inputContainer{
+
+.inputContainer {
     display: flex;
     flex-direction: row;
     margin-bottom: 20px;
 }
 
+.todoInput {
+
+}
+
+.todoButton {
+    margin-left: 40px;
+}
+
+.notesContainer{
+    width: 50%;
+}
