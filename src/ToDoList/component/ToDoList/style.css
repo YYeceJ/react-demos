@@ -1,0 +1,78 @@
+.container {
+    width: 80%;
+    display: flex;
+    margin: 20px 10%;
+    flex-direction: column;
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 20px;
+}
+
+.todoInput {
+
+}
+
+.todoButton {
+    margin-left: 40px;
+}
+
+.notesContainer{
+    width: 100%;
+}
+
+.noteGroupContainer{
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.noteContainer {
+    border-left:3px solid aquamarine;
+    width: 100% ;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid aquamarine;
+    margin-top: 5px;
+}
+
+.titleContainer{
+    padding: 10px 20px;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    background-color: azure;
+    width: 100%;
+    margin-bottom: 10px;
+    border-radius: 10px;
+}
+.titleStyle{
+    font-size: 28px;
+    font-weight: bold;
+}
+.groupNum{
+    background-color: #F9FAFC;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.contentContainer{
+    width: 93%;
+    float: left;
+    display: flex;
+    flex-direction: row;
+}
+.contentText{
+    font-size: 14px;
+    float: left;
+}

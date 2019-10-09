@@ -1,9 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './component/App/App';
-import './index.css';
+import ToDoListPage from './ToDoList/ToDoListPage'
 
 ReactDOM.render(
-  <App />,
+  <ToDoListPage />,
   document.getElementById('root')
 );

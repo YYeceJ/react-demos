@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React, {Component}  from 'react';
 import './style.css'
-import {Button, Input, Collapse, Checkbox} from 'element-react'
+import {Button, Input, Collapse, Checkbox,Table} from 'element-react'
 import 'element-theme-default';
 
 let data = [
@@ -18,14 +18,14 @@ let data = [
     }
 ]
 
-
 class ToDoList extends Component {
     constructor(props, context) {
         super(props, context);
 
         this.state = {
             todoList: data,
-            text: ''
+            text: '',
+            hover : false
         }
     }
 
@@ -64,6 +64,42 @@ class ToDoList extends Component {
         )
     }
 
+    renderNotesItem(arr) {
+
+        if(arr.length > 0 && arr !== null){
+            return (
+                <div className='noteGroupContainer'>
+                    <div className='titleContainer'>
+                        {
+                            arr[0].done === true ? <div className='titleStyle'> Done </div> : <div className='titleStyle'>ToDo</div>
+                        }
+                        <div className='groupNum'>{arr.length}</div>
+                    </div>
+                    {
+                        arr.reverse().map((item,index) => {
+                            return (
+                                <div className={['noteContainer',]}
+                                     // style={index % 2 === 0 ? {backgroundColor: '#fff'} : {backgroundColor: '#fafafa'}}
+                                     style={this.state.hover ? {backgroundColor: '#eef1f6'} : {backgroundColor: '#fff'}}
+                        // this.state.hover ? {backgroundColor: '#eef1f6'} : {backgroundColor: '#fff'
+                                     onMouseEnter={() => this.setState({hover : true})}
+                                     onMouseLeave={() => this.setState({hover : false})}>
+                                    <div className='contentContainer'>
+                                        <Checkbox checked={item.done} onChange={_ => this.handleClickCheckbox(item)} />
+                                        <div className='contentText' >{item.content}</div>
+                                    </div>
+                                    <div>
+                                        <i className="el-icon-delete" onClick={_ => this.handleClickDeleteButton(item)}></i>
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+            )
+        }
+    }
+
     handleClickButton() {
         let text = this.refs.todoInput.value
         let arr = this.state.todoList
@@ -75,34 +111,6 @@ class ToDoList extends Component {
             this.refs.todoInput.value = ''
         } else {
             alert('请输入内容')
-        }
-    }
-
-    renderNotesItem(arr) {
-        if (arr.length > 0 && arr !== null) {
-            let isDone = arr[0].done === true
-            return (
-                <div className='noteContainer'>
-                    <span>
-                        {
-                            arr[0].done === true ? <div> 已完成 </div> : <div>正在进行</div>
-                        }
-                        {arr.length}
-                    </span>
-                    {
-                        arr.map((item, index) => {
-                            return (
-                                <div>
-                                    <Checkbox checked={isDone} onChange={e => this.handleClickCheckbox(item)}>
-                                        {item.content}
-                                    </Checkbox>
-                                    <i className="el-icon-delete" onClick={e => this.handleClickDeleteButton(item)}></i>
-                                </div>
-                            )
-                        })
-                    }
-                </div>
-            )
         }
     }
 
@@ -122,14 +130,14 @@ class ToDoList extends Component {
 
     handleClickDeleteButton(item) {
         let arr = this.state.todoList
-        if(item){
-           arr.forEach((element,index) => {
-               if (element.content == item.content) {
-                   arr.splice(index,1)
-               }
-           })
+        if (item) {
+            arr.forEach((element, index) => {
+                if (element.content == item.content) {
+                    arr.splice(index, 1)
+                }
+            })
             this.setState({
-                todoList : arr
+                todoList: arr
             })
         }
     }
