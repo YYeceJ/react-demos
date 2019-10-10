@@ -1,0 +1,3 @@
+使用Refs转发，Parent的ref通过React.forwardRef转发给子组件中的input
+
+然后在父组件Parent中可以通过创建的ref的current属性访问input的属性

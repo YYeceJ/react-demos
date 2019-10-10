@@ -29,7 +29,7 @@ class Calculator extends Component {
         }
     }
 
-    render() {
+        render() {
         let temperature = this.state.temperature
         let scale = this.state.scale
         let celsius = scale === 'c' ?  temperature : tryConvert(temperature,toCelsius)
