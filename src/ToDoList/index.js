@@ -1,55 +1,99 @@
-import React, {Component}  from 'react';
+import React, {Component, Fragment} from 'react';
 import './style.css'
-import {Button, Input, Collapse, Checkbox,Table} from 'element-react'
+import {Checkbox, Button} from 'element-react'
 import 'element-theme-default';
+import MyForm from "./component/MyForm";
 
-let data = [
-    {
-        "content": "吃早饭",
-        "done": true
-    },
-    {
-        "content": "吃午饭",
-        "done": true
-    },
-    {
-        "content": "吃晚饭",
-        "done": false
-    }
-]
+function Header(props) {
+    return (
+        <div className='titleContainer'>
+            <div className='titleStyle'> {props.title} </div>
+            <div className='groupNum'>{props.number}</div>
+        </div>
+    )
+}
 
-class ToDoList extends Component {
+class Page extends Component {
     constructor(props, context) {
         super(props, context);
-
+        this.myInput = React.createRef()
         this.state = {
-            todoList: data,
-            text: '',
-            hover : false
+            todoList: [],
+            inputValue : ''
         }
     }
 
-    render() {
-        return (
-            <div className='container'>
-                {this.renderInput()}
-                {this.renderList()}
-            </div>
-        );
+    componentDidMount() {
+        this.getOriginalTodoList()
     }
 
-    renderInput() {
-        return (
-            <form onSubmit={event => event.preventDefault()} className='inputContainer'>
-                <input type='text' name='text'
-                       placeholder='请输入要做的事'
-                       ref='todoInput'
-                       autoFocus={true}
-                       className='todoInput'
-                />
-                <button onClick={e => this.handleClickButton()} className='todoButton'>提交</button>
-            </form>
-        )
+    getOriginalTodoList() {
+        fetch('./todoList.json')
+            .then(resp => resp.json())
+            .then(result => {
+                this.setState({
+                    todoList: result.data
+                })
+            })
+    }
+
+
+    handleItem(item, handling) {
+        let arr = this.state.todoList
+        if (item) {
+            let index = arr.indexOf(item)
+            if (index !== -1) {
+                if (handling === 'changeStatus') {
+                    arr[index].done = !item.done
+                }
+                if (handling === 'deleteItem') {
+                    arr.splice(index, 1)
+                }
+                this.setState({
+                    todoList: arr
+                })
+            }
+        }
+    }
+
+    renderItem(list) {
+        if (list.length > 0) {
+            return (
+                <Fragment>
+                    <Header title={list[0].done ? 'Done' : 'Todo'} number={list.length}/>
+                    <ul>
+                    {
+                        list.reverse().map((item) => {
+                            return (
+                                <li className='noteContainer'>
+                                    <div className='contentContainer'>
+                                        <Checkbox checked={item.done}
+                                                  onChange={_ => this.handleItem(item, 'changeStatus')}/>
+                                        <div className='contentText'>{item.content}</div>
+                                    </div>
+                                    <i className="el-icon-delete" onClick={_ => this.handleItem(item, 'deleteItem')}/>
+                                </li>
+                            )
+                        })
+                    }
+                    </ul>
+                </Fragment>
+            )
+        }
+    }
+
+    handlerTextChange() {
+        let text = this.myInput.current.value
+        let arr = this.state.todoList
+        if (text !== '' && text !== undefined) {
+            arr.push({"id": arr.length + 1, "content": text, "done": false})
+            this.setState({
+                todoList: arr
+            })
+            this.myInput.current.value = ''
+        } else {
+            alert('请输入内容')
+        }
     }
 
     renderList() {
@@ -57,90 +101,21 @@ class ToDoList extends Component {
         let todoArr = totalArr.filter(item => item.done === false)
         let doneArr = totalArr.filter(item => item.done === true)
         return (
-            <div className='notesContainer'>
-                {this.renderNotesItem(todoArr)}
-                {this.renderNotesItem(doneArr)}
-            </div>
+            <Fragment >
+                {this.renderItem(todoArr)}
+                {this.renderItem(doneArr)}
+            </Fragment>
         )
     }
 
-    renderNotesItem(arr) {
-
-        if(arr.length > 0 && arr !== null){
-            return (
-                <div className='noteGroupContainer'>
-                    <div className='titleContainer'>
-                        {
-                            arr[0].done === true ? <div className='titleStyle'> Done </div> : <div className='titleStyle'>ToDo</div>
-                        }
-                        <div className='groupNum'>{arr.length}</div>
-                    </div>
-                    {
-                        arr.reverse().map((item,index) => {
-                            return (
-                                <div className={['noteContainer',]}
-                                     // style={index % 2 === 0 ? {backgroundColor: '#fff'} : {backgroundColor: '#fafafa'}}
-                                     style={this.state.hover ? {backgroundColor: '#eef1f6'} : {backgroundColor: '#fff'}}
-                        // this.state.hover ? {backgroundColor: '#eef1f6'} : {backgroundColor: '#fff'
-                                     onMouseEnter={() => this.setState({hover : true})}
-                                     onMouseLeave={() => this.setState({hover : false})}>
-                                    <div className='contentContainer'>
-                                        <Checkbox checked={item.done} onChange={_ => this.handleClickCheckbox(item)} />
-                                        <div className='contentText' >{item.content}</div>
-                                    </div>
-                                    <div>
-                                        <i className="el-icon-delete" onClick={_ => this.handleClickDeleteButton(item)}></i>
-                                    </div>
-                                </div>
-                            )
-                        })
-                    }
-                </div>
-            )
-        }
-    }
-
-    handleClickButton() {
-        let text = this.refs.todoInput.value
-        let arr = this.state.todoList
-        if (text !== '') {
-            arr.push({"content": text, "done": false})
-            this.setState({
-                todoList: arr
-            })
-            this.refs.todoInput.value = ''
-        } else {
-            alert('请输入内容')
-        }
-    }
-
-    handleClickCheckbox(item) {
-        if (item) {
-            let arr = this.state.todoList
-            arr.forEach(element => {
-                if (element.content == item.content) {
-                    element.done = !item.done
-                }
-            })
-            this.setState({
-                todoList: arr
-            })
-        }
-    }
-
-    handleClickDeleteButton(item) {
-        let arr = this.state.todoList
-        if (item) {
-            arr.forEach((element, index) => {
-                if (element.content == item.content) {
-                    arr.splice(index, 1)
-                }
-            })
-            this.setState({
-                todoList: arr
-            })
-        }
+    render() {
+        return (
+            <div className='container'>
+                <MyForm onClickAddButton={() => this.handlerTextChange()} ref={this.myInput}/>
+                {this.renderList()}
+            </div>
+        );
     }
 }
 
-export default ToDoList;
+export default Page;
