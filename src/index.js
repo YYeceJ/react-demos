@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 // import Calculator from './TemperatureConvert/index'
 // import Parent from './parent-child-ref/index'
-import ToDoList from "./ToDoList";
+import App from "./ToDoWithRedux/components/App";
+// import ToDoList from "./ToDoList";
 ReactDOM.render(
-  <ToDoList />,
+  <App />,
   document.getElementById('root')
 );
 
